@@ -8,32 +8,6 @@
 
 import UIKit
 
-extension UIView {
-    
-    @IBInspectable var cornerRadius: CGFloat {
-        get {
-            return layer.cornerRadius
-        }
-        set {
-            layer.cornerRadius = newValue
-            layer.masksToBounds = newValue > 0
-        }}
-    
-    @IBInspectable var borderWidth: CGFloat {
-        get {
-            return layer.borderWidth
-        }
-        set {
-            layer.borderWidth = newValue
-        }}
-    
-    @IBInspectable var borderColor: UIColor? {
-        get {
-            return UIColor(cgColor: layer.borderColor!)
-        }
-        set { 
-            layer.borderColor = newValue?.cgColor 
-        }}}
 
 extension Double {
     
@@ -65,6 +39,8 @@ extension Double {
 
 
 class ViewController: UIViewController {
+    
+    var square = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -191,19 +167,25 @@ class ViewController: UIViewController {
             try! self.core.addStep(*)
         case 1104: //
             try! self.core.addStep(/)
-        //case 1105:
-            //try! self.core.addStep(pow(,))
-        //case 1106: //
-            //try! self.core.addStep(sqrt())
+        case 1105:
+            try! self.core.addStep(pow)
+        case 1106: //
+            try! self.core.addStep(pow)
+            square = true
         default:
             fatalError("Unknown operator button: \(sender)")
         }
     }
     
     @IBAction func calculateButtonClicked(_ sender: UIButton) {
-        // Add current number into the core as a step
         let currentNumber = Double(self.displayLabel.text ?? "0")!
-        try! self.core.addStep(currentNumber)
+        if square == false{
+            try! self.core.addStep(currentNumber)
+        }else{
+            try! self.core.addStep(1/currentNumber)
+            square = false
+        }
+        // Add current number into the core as a step
         // Get and show the result
         let result = self.core.calculate()!
         self.displayLabel.text = result.displayString
